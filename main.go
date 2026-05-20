@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"sync"
-	"slices"
 	"time"
 )
 
@@ -17,7 +16,7 @@ var mu sync.Mutex
 var wg sync.WaitGroup
 
 // generateRandomElements generates random elements.
-func generateRandomElements(size int) []int { //кажется готово
+func generateRandomElements(size int) []int {
 	// ваш код здесь
 	if size == 0 {
 		return []int{}
@@ -33,7 +32,7 @@ func generateRandomElements(size int) []int { //кажется готово
 }
 
 // maximum returns the maximum number of elements.
-func maximum(data []int) int { //кажется готово
+func maximum(data []int) int {
 	// ваш код здесь
 	if len(data) == 0 {
 		return 0
@@ -41,13 +40,19 @@ func maximum(data []int) int { //кажется готово
 		return 1
 	}
 
-	maxNumber := slices.Max(data)
+	maxNumber := data[0]
+
+	for _, v := range data {
+		if v > maxNumber {
+			maxNumber = v
+		}
+	}
 
 	return maxNumber
 }
 
 // maxChunks returns the maximum number of elements in a chunks.
-func maxChunks(data []int) int { //по моей логике это должно работать
+func maxChunks(data []int) int {
 	// ваш код здесь
 	slicePieceLen := len(data) / CHUNKS
 	maxChunksSlice := make([]int, CHUNKS)
@@ -55,19 +60,17 @@ func maxChunks(data []int) int { //по моей логике это должн�
 	for i := 0; i < CHUNKS; i++{
 		wg.Add(1)
 		go func (i int) {
-			mu.Lock()
-			defer mu.Unlock()
 			defer wg.Done()
 			startIndex := i * slicePieceLen
 			endIndex := startIndex + slicePieceLen
 			s := data[startIndex:endIndex]
-			maxNumberInChunk := slices.Max(s) //
-			maxChunksSlice = append(maxChunksSlice, maxNumberInChunk)
+			maxNumberInChunk := maximum(s)
+			maxChunksSlice[i] = maxNumberInChunk
 		} (i)
 	}
 	wg.Wait()
 	
-	maxNumber := slices.Max(maxChunksSlice)
+	maxNumber := maximum(maxChunksSlice)
 
 	return maxNumber
 }

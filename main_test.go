@@ -7,15 +7,13 @@ import (
 
 // Пишите тесты в этом файле
 
-func TestGenerateRandomElements(t *testing.T) { //кажется готово
+func TestGenerateRandomElements(t *testing.T) {
 	h := generateRandomElements(SIZE)
 
 	assert.Equal(t, SIZE, len(h))
 }
 
 func TestMaximum (t *testing.T) {
-	g := generateRandomElements(SIZE)
-	res := maximum(g)
 
 
 	table := []struct {
@@ -24,7 +22,8 @@ func TestMaximum (t *testing.T) {
     }{
 		{[]int{1, 2, 3}, 3},
 		{[]int{-1, -5, 0}, 0},
-		{g, res},
+		{[]int{7, 7, 7}, 7},
+		{[]int{1, 5, 3, 9, 2}, 9},
 	}
 
 	for _, item := range table {
